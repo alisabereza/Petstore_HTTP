@@ -2,18 +2,15 @@ package com.berezovska.petstore.controller.web;
 
 import com.berezovska.petstore.controller.util.HttpHeaders;
 import com.berezovska.petstore.model.Entity;
-import com.berezovska.petstore.model.Pet;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class WebClient<T extends Entity> implements Request<T>{
+public class WebClient<T extends Entity> implements Request<T> {
     private static Socket socket;
     private String host;
     private InetAddress ipHost;
@@ -21,8 +18,9 @@ public class WebClient<T extends Entity> implements Request<T>{
     private HttpHeaders httpHeaders;
     private Map<String, String> headers;
 
-    public WebClient(){
+    public WebClient() {
     }
+
     public WebClient(String hostname, int port) throws IOException {
         initSocket(hostname, port);
 //        initHeaders();
@@ -31,21 +29,24 @@ public class WebClient<T extends Entity> implements Request<T>{
     public void setPort(int port) {
         this.port = port;
     }
+
     public void setHost(String host) {
         this.host = host;
     }
+
     public void setIpHost(InetAddress ipHost) {
         this.ipHost = ipHost;
     }
+
     public void setSocket(Socket socket) {
         WebClient.socket = socket;
     }
 
-    public Socket getSocket(){
+    public Socket getSocket() {
         return socket;
     }
 
-    private void initSocket(String hostname, int port) throws IOException{
+    private void initSocket(String hostname, int port) throws IOException {
         this.host = hostname;
         this.ipHost = InetAddress.getByName(hostname);
         socket = new Socket(ipHost, port);
@@ -65,7 +66,6 @@ public class WebClient<T extends Entity> implements Request<T>{
 
             String json = toJson.substring(toJson.indexOf("\r\n\r\n"));
             System.out.println(json);
-            System.out.println("hello from webclient");///DEBUG
             return new Gson().fromJson(json, clazz);
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,7 +79,7 @@ public class WebClient<T extends Entity> implements Request<T>{
             this.headers = headers;
             String toJson = getResponseResult();
             System.out.println(toJson);
-            String json = toJson.substring(toJson.indexOf("\r\n\r\n")+3);
+            String json = toJson.substring(toJson.indexOf("\r\n\r\n") + 3);
             return new Gson().fromJson(json, clazz);
         } catch (IOException e) {
             e.printStackTrace();
@@ -100,7 +100,7 @@ public class WebClient<T extends Entity> implements Request<T>{
         return post(body);
     }
 
-    private String post(String body){
+    private String post(String body) {
         headers.put("body", body);
         headers.put(HttpHeaders.CONTENT_LENGTH.getName(), String.valueOf(body.getBytes().length));
         headers.put(HttpHeaders.CONTENT_TYPE.getName(), HttpHeaders.CONTENT_TYPE.getDefaultValue());
@@ -135,7 +135,7 @@ public class WebClient<T extends Entity> implements Request<T>{
         return null;
     }
 
-    public String getResponseString(Map<String, String> headers) throws IOException{
+    public String getResponseString(Map<String, String> headers) throws IOException {
         this.headers = headers;
         return getResponseResult();
     }
@@ -160,24 +160,23 @@ public class WebClient<T extends Entity> implements Request<T>{
         }
 
         writer.write(headers.remove("startline") + "\r\n");
-        for (Map.Entry<String, String> e:
+        for (Map.Entry<String, String> e :
                 headers.entrySet()) {
             System.out.print(e.getKey() + ": " + e.getValue() + "\r\n");
             writer.write(e.getKey() + ": " + e.getValue() + "\r\n");
         }
         writer.write("\r\n");
-        if (null != body){
+        if (null != body) {
             writer.write(body + "\r\n");
         }
         System.out.println((null == body) ? "" : "\n" + body);
-     //--------------------------_DEBUG POINT
         writer.flush();
 
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         StringBuilder sb = new StringBuilder();
         String line;
-        while ((line = reader.readLine()) != null){
+        while ((line = reader.readLine()) != null) {
             System.out.println("LINE IS: " + line);
             sb.append(line).append("\r\n");
         }
@@ -187,5 +186,4 @@ public class WebClient<T extends Entity> implements Request<T>{
 
         return result;
     }
-
 }

@@ -9,8 +9,9 @@ public class User implements Entity{
     private String password;
     private String phone;
     private int userStatus;
+    private String path;
 
-    public User () {}
+    public User ()  {}
 
     public User(long id, String username, String firstName, String lastName, String email, String password, String phone, int userStatus) {
         this.id = id;
@@ -25,6 +26,9 @@ public class User implements Entity{
     @Override
     public String getPath() {
         return "/v2/user";
+    }
+    public void setPath(String path) {
+        this.path = path;
     }
 
     @Override
