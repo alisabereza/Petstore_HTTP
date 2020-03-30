@@ -2,7 +2,7 @@ package com.berezovska.petstore.view.implementation;
 
 import com.berezovska.petstore.controller.util.HttpHeaders;
 import com.berezovska.petstore.controller.util.HttpVersion;
-import com.berezovska.petstore.controller.util.RequestCommands;
+import com.berezovska.petstore.controller.util.RequestCommand;
 import com.berezovska.petstore.controller.web.WebClient;
 import com.berezovska.petstore.model.Entity;
 
@@ -35,23 +35,24 @@ class GenericRequest<T extends Entity> {
 
     T getEntityByPath(String path, Class clazz){
         StringBuilder sb = new StringBuilder();
-        headers.put("startline", startGenerate(RequestCommands.GET, path, HttpVersion.HTTP_1_1));
+        headers.put("startline", startGenerate(RequestCommand.GET, path, HttpVersion.HTTP_1_1));
         T t = (T) webClient.GET(headers, clazz);
         return t;
     }
 
-    List<T> getListEntity(String path, Type clazz){
-        String startline = startGenerate(RequestCommands.GET, path, HttpVersion.HTTP_1_1);
+    List<T> getListEntity(String path, Type clazz) {
+        String startline = startGenerate(RequestCommand.GET, path, HttpVersion.HTTP_1_1);
         headers.put("startline", startline);
         List<T> ts = (List<T>) webClient.GETList(headers, clazz);
         return ts;
+
     }
 
     String getStringResult(String path){
-        String startline = startGenerate(RequestCommands.GET, path, HttpVersion.HTTP_1_1);
+        String startline = startGenerate(RequestCommand.GET, path, HttpVersion.HTTP_1_1);
         headers.put("startline", startline);
         try {
-            return webClient.getResponceString(headers);
+            return webClient.getResponseString(headers);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,30 +60,30 @@ class GenericRequest<T extends Entity> {
     }
 
     String postEntity(T t){
-        String startLine = startGenerate(RequestCommands.POST, t.getPath(), HttpVersion.HTTP_1_1);
+        String startLine = startGenerate(RequestCommand.POST, t.getPath(), HttpVersion.HTTP_1_1);
         headers.put("startline", startLine);
         return webClient.POST(headers, t);
     }
 
     String postEntity(T[] t){
-        String startLine = startGenerate(RequestCommands.POST, t[0].getPath() + "/createWithArray", HttpVersion.HTTP_1_1);
+        String startLine = startGenerate(RequestCommand.POST, t[0].getPath() + "/createWithArray", HttpVersion.HTTP_1_1);
         headers.put("startline", startLine);
         return webClient.POST(headers, t);
     }
 
     String putEntity(T t){
-        String startline = startGenerate(RequestCommands.PUT, t.getPath(), HttpVersion.HTTP_1_1);
+        String startline = startGenerate(RequestCommand.PUT, t.getPath(), HttpVersion.HTTP_1_1);
         headers.put("startline", startline);
         return webClient.PUT(headers, t);
     }
 
     String deleteEntity(String path, String apiKey){
-        String startLine = startGenerate(RequestCommands.DELETE, path, HttpVersion.HTTP_1_1);
+        String startLine = startGenerate(RequestCommand.DELETE, path, HttpVersion.HTTP_1_1);
         headers.put("startline", startLine);
         return webClient.DELETE(headers, apiKey);
     }
 
-    private String startGenerate(RequestCommands commands, String path, HttpVersion version){
+    private String startGenerate(RequestCommand commands, String path, HttpVersion version){
         StringBuilder sb = new StringBuilder();
         sb.append(commands.name()).append(" ").append(path).append(" ").append(version.getName());
         return String.valueOf(sb);

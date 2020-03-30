@@ -2,11 +2,14 @@ package com.berezovska.petstore.controller.web;
 
 import com.berezovska.petstore.controller.util.HttpHeaders;
 import com.berezovska.petstore.model.Entity;
+import com.berezovska.petstore.model.Pet;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,11 +58,14 @@ public class WebClient<T extends Entity> implements Request<T>{
 
     @Override
     public T GET(Map<String, String> headers, Class<T> clazz) {
+
         try {
             this.headers = headers;
             String toJson = getResponseResult();
-            System.out.println(toJson);                                   ///DEBUG
+
             String json = toJson.substring(toJson.indexOf("\r\n\r\n"));
+            System.out.println(json);
+            System.out.println("hello from webclient");///DEBUG
             return new Gson().fromJson(json, clazz);
         } catch (IOException e) {
             e.printStackTrace();
@@ -129,7 +135,7 @@ public class WebClient<T extends Entity> implements Request<T>{
         return null;
     }
 
-    public String getResponceString(Map<String, String> headers) throws IOException{
+    public String getResponseString(Map<String, String> headers) throws IOException{
         this.headers = headers;
         return getResponseResult();
     }
@@ -141,7 +147,11 @@ public class WebClient<T extends Entity> implements Request<T>{
         writer = new BufferedWriter(
                 new OutputStreamWriter(socket.getOutputStream())
         );
-        //DialogService.printSlip("response: ", 288);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println(headers.get("startline"));
 
         String body = null;
@@ -160,7 +170,7 @@ public class WebClient<T extends Entity> implements Request<T>{
             writer.write(body + "\r\n");
         }
         System.out.println((null == body) ? "" : "\n" + body);
-        System.out.println();  //--------------------------_DEBUG POINT
+     //--------------------------_DEBUG POINT
         writer.flush();
 
 
@@ -168,11 +178,13 @@ public class WebClient<T extends Entity> implements Request<T>{
         StringBuilder sb = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null){
+            System.out.println("LINE IS: " + line);
             sb.append(line).append("\r\n");
         }
         String result = String.valueOf(sb);
         writer.close();
         socket.close();
+
         return result;
     }
 
