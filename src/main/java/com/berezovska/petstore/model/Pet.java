@@ -1,5 +1,6 @@
 package com.berezovska.petstore.model;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Pet implements Entity {
@@ -59,19 +60,14 @@ public class Pet implements Entity {
 
     @Override
     public String toString() {
-        return "Pet {ID=" + getId() + ", Name=" + getName() + ", Category {ID=" + ((getCategory() == null) ? "" : (getCategory().getId() + ", name=" + getCategory().getName())) + "}, Status=" + getStatus().toString() + "}";
-    }
-
-    public void setStatus(String status) {
-        this.status = PetStatus.getPetStatus(status).orElse(PetStatus.PENDING);
-    }
-
-    public String printPhotos(List<String> photoUrls) {
-        StringBuilder sb = new StringBuilder();
-        for (String string : photoUrls) {
-            sb.append(string).append(", ");
-        }
-        return sb.toString();
+        return "Pet{" +
+                "id=" + id +
+                ", category=" + category +
+                ", name='" + name + '\'' +
+                ", photoUrls=" + Arrays.toString(photoUrls) +
+                ", tags=" + Arrays.toString(tags) +
+                ", status=" + status +
+                '}';
     }
 
 }
