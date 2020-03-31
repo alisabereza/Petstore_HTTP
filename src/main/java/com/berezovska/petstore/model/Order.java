@@ -36,4 +36,9 @@ public class Order implements Entity{
     public String getPath() {
         return "/v2/store/order";
     }
+
+
+    public String getStorePath() {
+        return "/v2/store";
+    }
 }
