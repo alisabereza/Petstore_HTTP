@@ -1,6 +1,7 @@
 package com.berezovska.petstore;
 
 import com.berezovska.petstore.controller.util.RequestCommand;
+import com.berezovska.petstore.view.initialization.OrderRequestInit;
 import com.berezovska.petstore.view.initialization.PetRequestInit;
 import com.berezovska.petstore.view.initialization.RequestInitialization;
 import com.berezovska.petstore.view.initialization.UserRequestInit;
@@ -36,7 +37,23 @@ public class MainMenu {
                     }
                     break;
                 }
-                case SHOP:
+                case ORDER:
+                    requestInit = new OrderRequestInit();
+                    command = RequestService.selectCommand();
+                    switch (command) {
+                        case GET:
+                            requestInit.requestType().getType();
+                            break;
+                        case PUT:
+                            requestInit.requestType().putType();
+                            break;
+                        case POST:
+                            requestInit.requestType().postType();
+                            break;
+                        case DELETE:
+                            requestInit.requestType().deleteType();
+                            break;
+                    }
                     break;
                 case USER: {
                     requestInit = new UserRequestInit();
