@@ -3,6 +3,8 @@ package com.berezovska.petstore.model;
 public class ApiResponse {
     private long code;
     private String type;
+    private String message;
+
 
     public long getCode() {
         return code;
@@ -22,5 +24,8 @@ public class ApiResponse {
         this.message = message;
     }
 
-    private String message;
+    @Override
+    public String toString() {
+        return "ApiResponse { code=" + getCode() + ", type=" + getType() + ", message=" + getMessage() + "}" ;
+    }
 }

@@ -1,6 +1,7 @@
 package com.berezovska.petstore.controller.web;
 
 import com.berezovska.petstore.controller.util.HttpHeaders;
+import com.berezovska.petstore.model.ApiResponse;
 import com.berezovska.petstore.model.Entity;
 import com.google.gson.Gson;
 
@@ -18,32 +19,9 @@ public class WebClient<T extends Entity> implements Request<T> {
     private HttpHeaders httpHeaders;
     private Map<String, String> headers;
 
-    public WebClient() {
-    }
 
     public WebClient(String hostname, int port) throws IOException {
         initSocket(hostname, port);
-//        initHeaders();
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public void setIpHost(InetAddress ipHost) {
-        this.ipHost = ipHost;
-    }
-
-    public void setSocket(Socket socket) {
-        WebClient.socket = socket;
-    }
-
-    public Socket getSocket() {
-        return socket;
     }
 
     private void initSocket(String hostname, int port) throws IOException {
@@ -121,14 +99,15 @@ public class WebClient<T extends Entity> implements Request<T> {
     }
 
     @Override
-    public String DELETE(Map<String, String> headers, String apiKey) {
+    public ApiResponse DELETE(Map<String, String> headers, String apiKey) {
 
         try {
             this.headers = headers;
             headers.put(HttpHeaders.API_KEY.getName(), apiKey);
             String result = getResponseResult();
             headers.remove(HttpHeaders.API_KEY.getName());
-            return result;
+            String json = result.substring(result.indexOf("\r\n\r\n"));
+            return new Gson().fromJson(json, ApiResponse.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -177,7 +156,6 @@ public class WebClient<T extends Entity> implements Request<T> {
         StringBuilder sb = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
-            System.out.println("LINE IS: " + line);
             sb.append(line).append("\r\n");
         }
         String result = String.valueOf(sb);

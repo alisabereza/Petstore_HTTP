@@ -1,5 +1,6 @@
 package com.berezovska.petstore.view.implementation;
 
+import com.berezovska.petstore.model.ApiResponse;
 import com.berezovska.petstore.model.User;
 
 import java.util.ArrayList;
@@ -18,7 +19,12 @@ public class UserRequestImpl extends GenericRequest<User> implements RequestType
         user = new User();
         String path = user.getPath() + "/" + name;
         user = getEntityByPath(path, User.class);
-        System.out.println(user);
+        if (user.getId()==0) {
+            System.out.println("User not found");
+        }
+        else {
+            System.out.println(user);
+        }
     }
 
     @Override
@@ -107,10 +113,10 @@ public class UserRequestImpl extends GenericRequest<User> implements RequestType
     public void deleteType() {
         System.out.print("Enter api key (special_key): ");
         String apiKey = scanner.next();
-        System.out.println("Enter username (format is: firstName.lastName@gmail.com): ");
+        System.out.println("Enter username: ");
         String name = scanner.next();
         String path = new User().getPath() + "/" + name;
-        String result = deleteEntity(path, apiKey);
+        ApiResponse result = deleteEntity(path, apiKey);
         System.out.println(result);
     }
 

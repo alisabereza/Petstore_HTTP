@@ -1,7 +1,10 @@
 package com.berezovska.petstore.view.implementation;
 
+import com.berezovska.petstore.model.ApiResponse;
 import com.berezovska.petstore.model.Order;
 import com.berezovska.petstore.model.OrderStatus;
+import com.berezovska.petstore.view.services.RequestService;
+
 import java.util.Scanner;
 
 public class OrderRequestImpl extends GenericRequest<Order> implements RequestType {
@@ -20,11 +23,15 @@ public class OrderRequestImpl extends GenericRequest<Order> implements RequestTy
         String answer = scanner.next();
         switch (answer) {
             case "id": {
-                System.out.println("Enter Order ID: ");
-                long orderId = scanner.nextLong();
+                long orderId = RequestService.getLongId();
                 String path = order.getPath() + "/" + orderId;
                 order = getEntityByPath(path, Order.class);
-                System.out.println(order);
+                if (order.getId()==0) {
+                    System.out.println("User not found");
+                }
+                else {
+                    System.out.println(order);
+                }
                 break;
             }
             case "inv": {
@@ -42,7 +49,7 @@ public class OrderRequestImpl extends GenericRequest<Order> implements RequestTy
 
     @Override
     public void postType() {
-        System.out.println("Enter pet ID to order: ");
+        System.out.println("Pet ID to be provided to make an Order.");
         long petId = scanner.nextLong();
         order = new Order(0, petId, 1, null, OrderStatus.PLACED, false);
         System.out.println("The following order will be ent: " + order);
@@ -59,10 +66,10 @@ public class OrderRequestImpl extends GenericRequest<Order> implements RequestTy
     public void deleteType() {
         System.out.print("Enter api key (special_key): ");
         String apiKey = scanner.next();
-        System.out.println("Enter Order ID to delete: ");
-        long orderId = scanner.nextLong();
+        System.out.println("Deleting Order by ID");
+        long orderId = RequestService.getLongId();
         String path = order.getPath() + "/" + orderId;
-        String result = deleteEntity(path, apiKey);
-        System.out.println(result);
+        ApiResponse response = deleteEntity(path, apiKey);
+        System.out.println(response);
     }
 }

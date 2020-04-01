@@ -2,68 +2,75 @@ package com.berezovska.petstore.view.services;
 
 import com.berezovska.petstore.controller.util.RequestCommand;
 import com.berezovska.petstore.model.PetStatus;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class RequestService {
+    public static Scanner sc = new Scanner(System.in);
 
     public static long getLongId() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Enter id ");
+        boolean idProvided = false;
         long id = 0;
-        try {
-            id = sc.nextLong();
-            return id;
-        } catch (Exception e) {
-            System.out.println("Wrong input format");
-            getLongId();
-        }
+        while (!idProvided) {
 
+        try {
+            sc.nextLine();
+            System.out.print("Enter id ");
+            id = sc.nextLong();
+            idProvided = true;
+        } catch (Exception e) {
+            System.out.println("Wrong input format, try again");
+        }
+        }
         return id;
     }
 
     public static PetStatus getPetStatus() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println(" Enter Pet status: ");
-        String status = sc.next();
-        Optional<PetStatus> petStatus = PetStatus.getPetStatus(status);
-
-        return petStatus.orElseThrow(() -> new IllegalArgumentException("Status value is wrong, choose the correct one"));
+        boolean petStatusSelected = false;
+        PetStatus petStatus = null;
+        while (!petStatusSelected) {
+            System.out.println(" Enter Pet status: ");
+            String status = sc.next();
+            try {
+                petStatus = PetStatus.getPetStatus(status).orElseThrow(() -> new IllegalArgumentException("Incorrect input, try again"));
+                petStatusSelected = true;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return petStatus;
     }
 
     public static EntityType selectEntity() {
-        Scanner sc = new Scanner(System.in);
-        String entity = "";
-        System.out.println("Choose entity: ");
-        System.out.println("Type: 'pet', 'user' or 'order': ");
+        boolean entitySelected = false;
         EntityType entityType = null;
-        getPause();
-        if (sc.hasNext()) {
-            entity = sc.next();
-            try {
-                entityType = EntityType.getType(entity).orElseThrow(() -> new IllegalArgumentException("Incorrect input, try again"));
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-                selectEntity();
-            }
+        while (!entitySelected) {
+            System.out.println("Choose entity: ");
+            System.out.println("Type: 'pet', 'user' or 'order': ");
+            getPause();
+                String entity = sc.next();
+                try {
+                    entityType = EntityType.getType(entity).orElseThrow(() -> new IllegalArgumentException("Incorrect input, try again"));
+                    entitySelected = true;
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                }
         }
 
         return entityType;
     }
 
     public static RequestCommand selectCommand() {
-        Scanner sc = new Scanner(System.in);
-        String commandString = "";
+        boolean commandSelected = false;
         RequestCommand command = null;
-        System.out.println("Select command from: 'get', 'put', 'post', 'delete': ");
-        getPause();
-        if (sc.hasNext()) {
-            commandString = sc.next();
+        while (!commandSelected) {
+            System.out.println("Select command from: 'get', 'put', 'post', 'delete': ");
+            getPause();
+            String commandString = sc.next();
             try {
                 command = RequestCommand.getCommand(commandString).orElseThrow(() -> new IllegalArgumentException("Incorrect input, try again"));
+                commandSelected = true;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
-                selectCommand();
             }
         }
 
@@ -71,7 +78,6 @@ public class RequestService {
     }
 
     public static boolean exitOption() {
-        Scanner sc = new Scanner(System.in);
         String answer = "";
         System.out.println("To exit, type 'exit', or anything to proceed : ");
         getPause();

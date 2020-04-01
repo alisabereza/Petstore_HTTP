@@ -1,5 +1,7 @@
 package com.berezovska.petstore.controller.web;
 
+import com.berezovska.petstore.model.ApiResponse;
+
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
@@ -10,5 +12,5 @@ public interface Request<T> {
     List<T> GETList(Map<String, String> headers, Type tClass);
     String POST(Map<String, String> headers, T t);
     String PUT(Map<String, String> headers, T t);
-    String DELETE(Map<String, String> headers, String ApiKey);
+    ApiResponse DELETE(Map<String, String> headers, String ApiKey);
 }

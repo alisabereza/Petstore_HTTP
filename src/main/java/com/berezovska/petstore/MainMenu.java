@@ -14,8 +14,9 @@ public class MainMenu {
     private RequestCommand command;
 
     void getRequestMethod() {
+        EntityType entityType;
         do {
-            EntityType entityType = RequestService.selectEntity();
+            entityType = RequestService.selectEntity();
             RequestService.getPause();
             switch (entityType) {
                 case PET: {
@@ -32,6 +33,8 @@ public class MainMenu {
                     break;
                 }
                 default:
+                    System.out.println("Incorrect input, try again");
+                    getRequestMethod();
                     break;
             }
             command = RequestService.selectCommand();
@@ -47,6 +50,11 @@ public class MainMenu {
                     break;
                 case DELETE:
                     requestInit.requestType().deleteType();
+                    break;
+
+                default:
+                    System.out.println("Incorrect input, try again");
+                    getRequestMethod();
                     break;
             }
             RequestService.getPause();

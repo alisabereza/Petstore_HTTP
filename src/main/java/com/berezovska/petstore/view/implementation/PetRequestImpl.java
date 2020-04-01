@@ -34,20 +34,18 @@ public Scanner scanner = new Scanner(System.in);
                 path = "/v2/pet/findByStatus?status=" + petStatus.getStatus();
                 List<Pet> petList = getListEntity(path, new TypeToken<List<Pet>>(){}.getType());
                 petList.stream()
-                        .sorted(Comparator.comparingLong(p -> p.getId()))
+                        .sorted(Comparator.comparingLong(Pet::getId))
                         .forEach(System.out::println);
                 break;
             default:
                 System.out.println("Incorrect input");
-                return;
         }
-
     }
 
     @Override
     public void postType() {
-        Pet pet = new Pet();
-        System.out.println("Fill the pet");
+        Pet pet;
+        System.out.println("Enter pet metrics: ");
         pet = fillPet();
          String s = postEntity(pet);
         System.out.println(s);
@@ -77,13 +75,13 @@ public Scanner scanner = new Scanner(System.in);
         long id = RequestService.getLongId();
         String path = new Pet().getPath() + "/" + id;
         System.out.println();
-        String s = deleteEntity(path, apiKey);
-        System.out.println(s);
+        ApiResponse response = deleteEntity(path, apiKey);
+        System.out.println(response);
     }
 
 
     private Pet fillPet(){
-        Pet pet= new Pet();
+        Pet pet;
         System.out.println("Enter pet category: ");
         String categoryName = scanner.nextLine();
         System.out.println("Enter pet name: ");

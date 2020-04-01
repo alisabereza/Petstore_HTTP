@@ -1,17 +1,19 @@
 package com.berezovska.petstore.model;
 
+import com.google.api.client.util.DateTime;
+
 import java.time.LocalDate;
 
 public class Order implements Entity{
     private long id;
     private long petId;
     private int quantity;
-    private LocalDate shipDate;
+    private DateTime shipDate;
     private OrderStatus status;
     private boolean complete = false;
 
     public Order () {}
-    public Order(long id, long petId, int quantity, LocalDate shipDate, OrderStatus status, boolean complete) {
+    public Order(long id, long petId, int quantity, DateTime shipDate, OrderStatus status, boolean complete) {
         this.id = id;
         this.petId = petId;
         this.quantity = quantity;
@@ -37,6 +39,10 @@ public class Order implements Entity{
         return "/v2/store/order";
     }
 
+
+    public long getId() {
+        return id;
+    }
 
     public String getStorePath() {
         return "/v2/store";

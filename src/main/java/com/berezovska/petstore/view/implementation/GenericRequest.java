@@ -4,6 +4,7 @@ import com.berezovska.petstore.controller.util.HttpHeaders;
 import com.berezovska.petstore.controller.util.HttpVersion;
 import com.berezovska.petstore.controller.util.RequestCommand;
 import com.berezovska.petstore.controller.web.WebClient;
+import com.berezovska.petstore.model.ApiResponse;
 import com.berezovska.petstore.model.Entity;
 
 import java.io.IOException;
@@ -34,17 +35,14 @@ class GenericRequest<T extends Entity> {
     }
 
     T getEntityByPath(String path, Class clazz){
-        StringBuilder sb = new StringBuilder();
         headers.put("startline", startGenerate(RequestCommand.GET, path, HttpVersion.HTTP_1_1));
-        T t = (T) webClient.GET(headers, clazz);
-        return t;
-    }
+        return (T) webClient.GET(headers, clazz);
+            }
 
     List<T> getListEntity(String path, Type clazz) {
         String startline = startGenerate(RequestCommand.GET, path, HttpVersion.HTTP_1_1);
         headers.put("startline", startline);
-        List<T> ts = (List<T>) webClient.GETList(headers, clazz);
-        return ts;
+        return (List<T>) webClient.GETList(headers, clazz);
 
     }
 
@@ -77,7 +75,7 @@ class GenericRequest<T extends Entity> {
         return webClient.PUT(headers, t);
     }
 
-    String deleteEntity(String path, String apiKey){
+    ApiResponse deleteEntity(String path, String apiKey){
         String startLine = startGenerate(RequestCommand.DELETE, path, HttpVersion.HTTP_1_1);
         headers.put("startline", startLine);
         return webClient.DELETE(headers, apiKey);
