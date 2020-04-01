@@ -1,6 +1,5 @@
 package com.berezovska.petstore.view.implementation;
 
-
 import com.berezovska.petstore.model.User;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ public class UserRequestImpl extends GenericRequest<User> implements RequestType
     @Override
     public void getType() {
 
-        System.out.println("Enter username format is: firstName.lastName@gmail.com): ");
+        System.out.println("Enter username: ");
         String name = scanner.next();
         user = new User();
         String path = user.getPath() + "/" + name;
@@ -24,10 +23,10 @@ public class UserRequestImpl extends GenericRequest<User> implements RequestType
 
     @Override
     public void postType() {
-        String firstName = "";
-        String lastName = "";
-        String email = "";
-        User user = null;
+        String firstName;
+        String lastName ;
+        String email ;
+        user = null;
         List<User> users = new ArrayList<>();
 
         boolean userListCompleted = false;
@@ -63,15 +62,45 @@ public class UserRequestImpl extends GenericRequest<User> implements RequestType
 
     @Override
     public void putType() {
-        System.out.println("Enter username (format is: firstName.lastName@gmail.com): ");
-        String firstName = scanner.next();
-        System.out.println("Enter user last name: ");
-        String lastName = scanner.next();
-        String email = String.format("%s.%s@gmail.com", firstName, lastName);
-        user = new User(0, email, firstName, lastName, email, "xxx", "103", 1);
+        System.out.println("To change user data, please login to application.");
+        user = login();
         user.setPath(user.getPath() + "/" + user.getUsername());
-        String result = putEntity(user);
-        System.out.println(result);
+        if (user!=null) {
+            System.out.println("Select what to change: 'first_name', 'last_name', 'email', 'phone': ");
+            String answer = scanner.next();
+
+            switch (answer) {
+                case "first_name": {
+                    System.out.println("Enter new first name: ");
+                    user.setFirstName(scanner.next());
+                    break;
+                }
+                case "last_name": {
+                    System.out.println("Enter new last name: ");
+                    user.setLastName(scanner.next());
+                    break;
+                }
+                case "email": {
+                    System.out.println("Enter new email: ");
+                    user.setEmail(scanner.next());
+                    break;
+                }
+                case "phone": {
+                    System.out.println("Enter new phone number: ");
+                    user.setPhone(scanner.next());
+                    break;
+                }
+                default:
+                    System.out.println("Incorrect input. Try again");
+                    putType();
+                    break;
+            }
+            String result = putEntity(user);
+            System.out.println(result);
+            user.setPath("/v2/user");
+            logout();
+        }
+
     }
 
     @Override
@@ -86,20 +115,21 @@ public class UserRequestImpl extends GenericRequest<User> implements RequestType
     }
 
 
-    public void login() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter username");
+    public User login() {
+        System.out.println("Enter username: ");
         String name = scanner.next();
-        System.out.println("Enter password");
+        System.out.println("Enter password: ");
         String pass = scanner.next();
-
-        String ans = getStringResult(user.getPath() + "/login?username=" + name + "&password=" + pass);
-        System.out.println(ans);
+        String answer = getStringResult(user.getPath() + "/login?username=" + name + "&password=" + pass);
+        System.out.println(answer);
+        user = getEntityByPath(user.getPath() + "/" + name, User.class);
+        return user;
     }
 
     public void logout() {
-        String ans = getStringResult(user.getPath() + "/logout");
-        System.out.println(ans);
+        String answer = getStringResult(user.getPath() + "/logout");
+            System.out.println(answer);
+        }
     }
-}
+
 

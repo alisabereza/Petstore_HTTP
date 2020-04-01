@@ -20,61 +20,33 @@ public class MainMenu {
             switch (entityType) {
                 case PET: {
                     requestInit = new PetRequestInit();
-                    command = RequestService.selectCommand();
-                    switch (command) {
-                        case GET:
-                            requestInit.requestType().getType();
-                            break;
-                        case PUT:
-                            requestInit.requestType().putType();
-                            break;
-                        case POST:
-                            requestInit.requestType().postType();
-                            break;
-                        case DELETE:
-                            requestInit.requestType().deleteType();
-                            break;
-                    }
                     break;
                 }
                 case ORDER:
                     requestInit = new OrderRequestInit();
-                    command = RequestService.selectCommand();
-                    switch (command) {
-                        case GET:
-                            requestInit.requestType().getType();
-                            break;
-                        case PUT:
-                            requestInit.requestType().putType();
-                            break;
-                        case POST:
-                            requestInit.requestType().postType();
-                            break;
-                        case DELETE:
-                            requestInit.requestType().deleteType();
-                            break;
-                    }
+
                     break;
                 case USER: {
                     requestInit = new UserRequestInit();
-                    command = RequestService.selectCommand();
-                    switch (command) {
-                        case GET:
-                            requestInit.requestType().getType();
-                            break;
-                        case PUT:
-                            requestInit.requestType().putType();
-                            break;
-                        case POST:
-                            requestInit.requestType().postType();
-                            break;
-                        case DELETE:
-                            requestInit.requestType().deleteType();
-                            break;
-                    }
+
                     break;
                 }
                 default:
+                    break;
+            }
+            command = RequestService.selectCommand();
+            switch (command) {
+                case GET:
+                    requestInit.requestType().getType();
+                    break;
+                case PUT:
+                    requestInit.requestType().putType();
+                    break;
+                case POST:
+                    requestInit.requestType().postType();
+                    break;
+                case DELETE:
+                    requestInit.requestType().deleteType();
                     break;
             }
             RequestService.getPause();

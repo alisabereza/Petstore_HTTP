@@ -25,7 +25,9 @@ public class User implements Entity{
     }
     @Override
     public String getPath() {
-        return "/v2/user";
+        if (this.path==null)
+        {return "/v2/user";}
+        else {return this.path;}
     }
     public void setPath(String path) {
         this.path = path;
