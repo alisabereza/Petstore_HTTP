@@ -49,7 +49,7 @@ public class OrderRequestImpl extends GenericRequest<Order> implements RequestTy
 
     @Override
     public void postType() {
-        System.out.println("Pet ID to be provided to make an Order.");
+        System.out.println("Enter Pet ID to order: ");
         long petId = scanner.nextLong();
         order = new Order(0, petId, 1, null, OrderStatus.PLACED, false);
         System.out.println("The following order will be ent: " + order);
